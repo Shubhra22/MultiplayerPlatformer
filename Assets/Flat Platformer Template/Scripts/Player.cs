@@ -2,9 +2,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviourPun {
     public float WalkSpeed;
     public float JumpForce;
     public AnimationClip _walk, _jump;
@@ -21,7 +22,12 @@ public class Player : MonoBehaviour {
     private Vector2 _inputAxis;
     private RaycastHit2D _hit;
 
-	void Start ()
+    private void Awake()
+    {
+        
+    }
+
+    void Start ()
     {
         rig = gameObject.GetComponent<Rigidbody2D>();
         _startScale = transform.localScale.x;
@@ -29,6 +35,7 @@ public class Player : MonoBehaviour {
 
     void Update()
     {
+        if (!photonView.IsMine) return;
         if (_hit = Physics2D.Linecast(new Vector2(_GroundCast.position.x, _GroundCast.position.y + 0.2f), _GroundCast.position))
         {
             if (!_hit.transform.CompareTag("Player"))
@@ -49,6 +56,7 @@ public class Player : MonoBehaviour {
 
     void FixedUpdate()
     {
+        if (!photonView.IsMine) return;
         Vector3 dir = cam.ScreenToWorldPoint(Input.mousePosition) - _Blade.transform.position;
         dir.Normalize();
 

@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class CameraMove : MonoBehaviour {
+public class CameraMove : MonoBehaviourPun {
     public float damping = 1.5f;
     public Transform _target;
     public Vector2 offset = new Vector2(2f, 1f);
@@ -11,6 +13,14 @@ public class CameraMove : MonoBehaviour {
     private int lastX;
     private float dynamicSpeed;
     private Camera _cam;
+
+    private void Awake()
+    {
+        if (!photonView.IsMine)
+        {
+            gameObject.SetActive(false);
+        }
+    }
 
     void Start()
     {
