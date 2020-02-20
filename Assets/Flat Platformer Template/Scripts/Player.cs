@@ -12,6 +12,8 @@ public class Player : MonoBehaviourPun {
     public Animation _Legs;
     public Transform _Blade, _GroundCast;
     public Camera cam;
+    public GameObject bullet;
+    public Transform spawnPos;
     public bool mirror;
 
 
@@ -22,6 +24,7 @@ public class Player : MonoBehaviourPun {
     private Vector2 _inputAxis;
     private RaycastHit2D _hit;
 
+    
     private void Awake()
     {
         
@@ -65,6 +68,11 @@ public class Player : MonoBehaviourPun {
         if (cam.ScreenToWorldPoint(Input.mousePosition).x < transform.position.x - 0.2f)
             mirror = true;
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            Shoot(spawnPos.position,dir);
+        }
+        
         if (!mirror)
         {
             rot = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
@@ -112,5 +120,12 @@ public class Player : MonoBehaviourPun {
     void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, _GroundCast.position);
+    }
+
+    void Shoot(Vector2 pos, Vector2 dir)
+    {
+        GameObject bul = PhotonNetwork.Instantiate(bullet.name, pos, Quaternion.identity);
+        //bul.GetComponent<Rigidbody2D>().AddForce(dir.normalized*100,ForceMode2D.Impulse);
+        bul.GetComponent<Rigidbody2D>().velocity = dir.normalized * 50;
     }
 }
